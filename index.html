@@ -3,41 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic AR with A-Frame and AR.js</title>
+    <title>AR Overlay with A-Frame and AR.js</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.0/aframe/build/aframe-ar.js"></script>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        #instructions {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-        }
-    </style>
 </head>
-<body>
-    <div id="instructions">
-        <p>Point your camera at the Hiro marker below:</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/HIRO.jpg" alt="Hiro marker" width="100">
-        <p>Or print this marker and use your camera to view the AR content.</p>
-    </div>
-
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <!-- Hiro marker -->
-        <a-marker preset="hiro">
-            <!-- Your 3D model here -->
-            <a-entity 
-                gltf-model="https://heytosd.github.io/armodels/bmw_m2_g87_free/scene.gltf"  <!-- Replace with the URL of your 3D model -->
-                scale="0.5 0.5 0.5"
-                position="0 0 0"
-                rotation="0 0 0">
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+        <!-- Fixed position entity -->
+        <a-entity position="0 0 -4">
+            <a-entity
+                gltf-model="https://example.com/your-model.glb" <!-- Replace with your 3D model URL -->
+                scale="2 2 2" <!-- Adjust scale as needed -->
+                rotation="0 180 0"> <!-- Adjust rotation as needed -->
             </a-entity>
-        </a-marker>
+        </a-entity>
         <!-- Camera -->
-        <a-entity camera></a-entity>
+        <a-camera position="0 0 0"></a-camera>
     </a-scene>
 </body>
 </html>
