@@ -3,22 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Overlay with A-Frame and AR.js</title>
+    <title>Interactive AR Model with Zoom and Rotate</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.0/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
-        <!-- Fixed position entity -->
-        <a-entity position="0 0 -4">
+    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' touchmove>
+        <a-entity id="movable-model" position="0 0 -4">
             <a-entity
                 gltf-model="https://heytosd.github.io/armodels/bmw_m2_g87_free/scene.gltf" <!-- Replace with your 3D model URL -->
-                scale="2 2 2" <!-- Adjust scale as needed -->
-                rotation="0 180 0"> <!-- Adjust rotation as needed -->
+                scale="2 2 2"
+                rotation="0 0 0">
             </a-entity>
         </a-entity>
-        <!-- Camera -->
         <a-camera position="0 0 0"></a-camera>
     </a-scene>
+
+    <script>
+        let initialDistance = null;
+        let initialScale = 1;
+        const model = document.getElementById('movable-model');
+        
+        document.addEventListener('touchmove', function(event) {
+            if (event.touches.length == 1) {
+                // Rotation (single touch)
+                let touch = event.touches[0];
+                let rotationY = (touch.pageX / window.innerWidth) * 360;
+                model.setAttribute('rotation', `0 ${rotationY} 0`);
+            } else if (event.touches.length == 2) {
+                // Zoom (pinch)
+                let touch1 = event.touches[0];
+                let touch2 = event.touches[1];
+                let distance = Math.hypot(touch2.pageX - touch1.pageX, touch2.pageY - touch1.pageY);
+                
+                if (!initialDistance) {
+                    initialDistance = distance;
+                } else {
+                    let scale = initialScale * (distance / initialDistance);
+                    model.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                }
+            }
+        }, false);
+
+        document.addEventListener('touchend', function(event) {
+            if (event.touches.length < 2) {
+                initialDistance = null;
+                initialScale = parseFloat(model.getAttribute('scale').x);
+            }
+        }, false);
+    </script>
 </body>
 </html>
